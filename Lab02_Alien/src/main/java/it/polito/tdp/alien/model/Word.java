@@ -1,17 +1,17 @@
 package it.polito.tdp.alien.model;
 
-import java.util.List;
+import java.util.*;
 
 public class Word {
 	
 	private String alienWord;
-	private String translation;
+	private Collection<String> translation;
 	
 	/** Costruttore parola aliena - traduzione
 	 * @param alienWord parola aliena
 	 * @param translation traduzione 
 	 */
-	public Word(String alienWord, String translation) {
+	public Word(String alienWord, Collection<String> translation) {
 		super();
 		this.alienWord = alienWord;
 		this.translation = translation;
@@ -22,11 +22,17 @@ public class Word {
 	}
 
 	public String getTranslation() {
-		return translation;
+		
+		String tempT = "";
+		
+		for(String s : translation)
+			tempT += s + "\n";
+		
+		return tempT;
 	}
 
-	public void setTranslation(String translation) {
-		this.translation = translation;
+	public void addTranslation(Collection<String> translation) {
+		this.translation.addAll(translation);
 	}
 
 }

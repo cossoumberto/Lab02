@@ -1,8 +1,9 @@
 package it.polito.tdp.alien;
 
 import java.net.URL;
+
 import java.security.InvalidParameterException;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import it.polito.tdp.alien.model.AlienDictionary;
 import javafx.event.ActionEvent;
@@ -37,6 +38,7 @@ public class FXMLController {
     void doReset(ActionEvent event) {
     	txtInsert.clear();
     	txtTranslation.clear();
+    	alienDictionary.getDizionario().clear();
     }
 
     @FXML
@@ -45,34 +47,36 @@ public class FXMLController {
     	String textInserito = txtInsert.getText().toLowerCase();
     	String array [] = textInserito.split(" ");
     	String alienWord = null;
-    	String translation = null;
+    	Set<String> translation = new TreeSet<>();
     	
     	for(String s : array)
     		if(s.compareTo("")!=0) {
     			if(alienWord==null)
     				alienWord = s;
     			else
-    				translation = s;
+    				translation.add(s);
     		}
     	
-    	if(translation!=null) {
+    	if(translation.size()>0) {
     		try {
     			alienDictionary.addWord(alienWord, translation);
     			txtTranslation.setText("PAROLA AGGIORNATA CORRETTAMENTE");
     			
-    		} catch (InvalidParameterException e) {
-    			txtTranslation.setText("LE PAROLE DEVE CONTENERE SOLO LETTERE");
+    		} catch (InvalidParameterException ipe) {
+    			txtTranslation.setText("LA PAROLA ALIENA DEVE CONTENERE SOLO LETTERE");
+    		} catch (IllegalStateException ise) {
+    			txtTranslation.setText("PRESENTI TRADUZIONI NON SONO VALIDE");
     		}
+    		
     		txtInsert.clear();
+    		
+    	} else if(translation.size()==0) {
+    		String translationS = alienDictionary.translateWord(alienWord);
+    		if(translationS==null) 
+    			translationS = "PAROLA NON PRESENTE NEL DIZIONARIO";
+    		txtTranslation.setText(translationS);
     	}
     	
-    	if(translation==null) {
-    		translation = alienDictionary.translateWord(alienWord);
-    		if(translation==null) 
-    			translation = "PAROLA NON PRESENTE NEL DIZIONARIO";
-    		txtTranslation.setText(translation);
-    	}
-    		
     }
 
     @FXML
