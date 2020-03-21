@@ -77,6 +77,7 @@ public class FXMLController {
     		txtTranslation.setText(translationS);
     	}
     	
+    	
     }
 
     @FXML
